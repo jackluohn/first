@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.irootech.service.mapper.SanydbReportConstructionDay">
+
+    <select id="getDeviceInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        select distinct device_id as deviceId
+        from sanydb_report_corework_day t
+        where t.device_type_id = #{modelId}
+        and <![CDATA[ t.create_date <= #{countDate}]]>
+        <if test="oil != null and oil != ''">
+            and t.fuel_machine > 0
+        </if>
+        <if test="efficiency != null and efficiency != ''">
+            and t.work_time >0 and t.machine_time > 0
+        </if>
+    </select>
+
+    <select id="getDeviceList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			model_id as modelId,
+			crm_mode_name as modelName,
+			crm_BU_name as crmModeName
+		from sanydb_model_constrast_new
+	</select>
+
+    <select id="getDeviceExitYears" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+            device_id as deviceId,
+            production_year as productionYear
+		from sanydb_base_device_exp
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+package com.irootech.service;
+
+import com.irootech.domain.SanydbReportCoreworkCount;
+import org.hibernate.sql.Insert;
+
+import java.util.List;
+import java.util.Map;
+
+public interface ReportCoreworkCountService {
+
+    public List<Map> getDeviceInfo(Map map);
+
+    public List<Map> getDeviceList();
+
+    public List<Map>  getDeviceExitYears();
+
+    public void Insert(SanydbReportCoreworkCount sanydbReportCoreworkCount);
+
+}
+
+
+
+
+
+
+package com.irootech.service.impl;
+
+import com.irootech.domain.reportCoreworkCountExample;
+import com.irootech.service.ReportCoreworkCount;
+import com.irootech.service.mapper.SanydbReportConstructionDay;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class ReportCoreworkCountImpl implements ReportCoreworkCount {
+
+    @Autowired
+    private SanydbReportConstructionDay sanydbReportConstructionDay;
+
+
+    @Override
+    public List<Map> getDeviceInfo(Map map) {
+        return sanydbReportConstructionDay.getDeviceInfo(map);
+    }
+
+    @Override
+    public List<Map> getDeviceList() {
+        return sanydbReportConstructionDay.getDeviceList();
+    }
+
+    @Override
+    public List<Map> getDeviceExitYears() {
+        return sanydbReportConstructionDay.getDeviceExitYears();
+    }
+
+    @Override
+    public void insert(reportCoreworkCountExample reportCoreworkCountExample) {
+        sanydbReportConstructionDay.insert(reportCoreworkCountExample);
+    }
+
+}
+
+
+
+package com.irootech.domain;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+
+@Table(name="sanydb_report_corework_count")
+        public class SanydbReportCoreworkCount {
+
+    @Column(name = "model_name")
+    private String modelName;
+
+    @Column(name = "model_id")
+    private String modelId;
+
+    @Column(name = "crm_mode_name")
+    private String crmModeName;
+
+    @Column(name="crm_mode_id")
+    private String crmModeId;
+
+    @Column(name = "count_date")
+    private String countDate;
+
+    @Column(name="create_date")
+    private String createDate;
+
+    @Column(name = "update_date")
+    private String updateDate;
+
+    @Column(name = "del_flag")
+    private String delFlag;
+
+    @Column(name = "device_oil_new_count")
+    private Integer deviceOilNewCount;
+
+    @Column(name = "device_oil_sub_new_count")
+    private Integer deviceOilSubNewCount;
+
+    @Column(name = "device_oil_old_count")
+    private Integer deviceOilOldCount;
+
+    @Column(name = "device_efficiency_new_count")
+    private Integer deviceEfficiencyNewCount;
+
+    @Column(name = "device_efficiency_sub_new_count")
+    private Integer deviceEfficiencySubNewCount;
+
+    @Column(name = "device_efficiency_old_count")
+    private Integer deviceEfficiencyOldCount;
+
+    @Column(name = "all_oil_count")
+    private Integer allOilCount;
+
+    @Column(name = "all_efficiency_count")
+    private Integer allEfficiencyCount;
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public String getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(String modelId) {
+        this.modelId = modelId;
+    }
+
+    public String getCrmModeName() {
+        return crmModeName;
+    }
+
+    public void setCrmModeName(String crmModeName) {
+        this.crmModeName = crmModeName;
+    }
+
+    public String getCrmModeId() {
+        return crmModeId;
+    }
+
+    public void setCrmModeId(String crmModeId) {
+        this.crmModeId = crmModeId;
+    }
+
+    public String getCountDate() {
+        return countDate;
+    }
+
+    public void setCountDate(String countDate) {
+        this.countDate = countDate;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Integer getDeviceOilNewCount() {
+        return deviceOilNewCount;
+    }
+
+    public void setDeviceOilNewCount(Integer deviceOilNewCount) {
+        this.deviceOilNewCount = deviceOilNewCount;
+    }
+
+    public Integer getDeviceOilSubNewCount() {
+        return deviceOilSubNewCount;
+    }
+
+    public void setDeviceOilSubNewCount(Integer deviceOilSubNewCount) {
+        this.deviceOilSubNewCount = deviceOilSubNewCount;
+    }
+
+    public Integer getDeviceOilOldCount() {
+        return deviceOilOldCount;
+    }
+
+    public void setDeviceOilOldCount(Integer deviceOilOldCount) {
+        this.deviceOilOldCount = deviceOilOldCount;
+    }
+
+    public Integer getDeviceEfficiencyNewCount() {
+        return deviceEfficiencyNewCount;
+    }
+
+    public void setDeviceEfficiencyNewCount(Integer deviceEfficiencyNewCount) {
+        this.deviceEfficiencyNewCount = deviceEfficiencyNewCount;
+    }
+
+    public Integer getDeviceEfficiencySubNewCount() {
+        return deviceEfficiencySubNewCount;
+    }
+
+    public void setDeviceEfficiencySubNewCount(Integer deviceEfficiencySubNewCount) {
+        this.deviceEfficiencySubNewCount = deviceEfficiencySubNewCount;
+    }
+
+    public Integer getDeviceEfficiencyOldCount() {
+        return deviceEfficiencyOldCount;
+    }
+
+    public void setDeviceEfficiencyOldCount(Integer deviceEfficiencyOldCount) {
+        this.deviceEfficiencyOldCount = deviceEfficiencyOldCount;
+    }
+
+    public Integer getAllOilCount() {
+        return allOilCount;
+    }
+
+    public void setAllOilCount(Integer allOilCount) {
+        this.allOilCount = allOilCount;
+    }
+
+    public Integer getAllEfficiencyCount() {
+        return allEfficiencyCount;
+    }
+
+    public void setAllEfficiencyCount(Integer allEfficiencyCount) {
+        this.allEfficiencyCount = allEfficiencyCount;
+    }
+
+    @Override
+    public String toString() {
+        return "reportCoreworkCountExample{" +
+                "modelName='" + modelName + '\'' +
+                ", modelId='" + modelId + '\'' +
+                ", crmModeName='" + crmModeName + '\'' +
+                ", crmModeId='" + crmModeId + '\'' +
+                ", countDate=" + countDate +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
+                ", delFlag='" + delFlag + '\'' +
+                ", deviceOilNewCount=" + deviceOilNewCount +
+                ", deviceOilSubNewCount=" + deviceOilSubNewCount +
+                ", deviceOilOldCount=" + deviceOilOldCount +
+                ", deviceEfficiencyNewCount=" + deviceEfficiencyNewCount +
+                ", deviceEfficiencySubNewCount=" + deviceEfficiencySubNewCount +
+                ", deviceEfficiencyOldCount=" + deviceEfficiencyOldCount +
+                ", allOilCount=" + allOilCount +
+                ", allEfficiencyCount=" + allEfficiencyCount +
+                '}';
+    }
+}
+
+
+
+
+
+
+
+
+
+
+package com.irootech.service.impl;
+
+import com.irootech.domain.SanydbReportCoreworkCount;
+import com.irootech.service.ReportCoreworkCountService;
+import com.irootech.service.mapper.SanydbReportConstructionDayMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Map;
+
+public class ReportCoreworkCountServiceImpl implements ReportCoreworkCountService {
+
+    @Autowired
+    private SanydbReportConstructionDayMapper sanydbReportConstructionDayMapper;
+
+    @Override
+    public List<Map> getDeviceInfo(Map map) {
+        return sanydbReportConstructionDayMapper.getDeviceInfo(map);
+    }
+
+    @Override
+    public List<Map> getDeviceList() {
+        return sanydbReportConstructionDayMapper.getDeviceList();
+    }
+
+    @Override
+    public List<Map> getDeviceExitYears() {
+        return sanydbReportConstructionDayMapper.getDeviceExitYears();
+    }
+
+    @Override
+    public void Insert(SanydbReportCoreworkCount sanydbReportCoreworkCount) {
+        sanydbReportConstructionDayMapper.insert( sanydbReportCoreworkCount);
+    }
+}
